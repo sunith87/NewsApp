@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NewsApp</string>
+    <string name="current_week_text">This week</string>
+    <string name="last_week_text">Last week</string>
+    <string name="weeks_ago_post_fix">weeks ago</string>
+
+
+    <string name="guardian_api_key">enj8pstqu5yat6yesfsdmd39</string>
 </resources>

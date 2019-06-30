@@ -6,7 +6,11 @@ import com.newsapp.ui.articlelist.model.ListItem
 import io.reactivex.Single
 
 interface ArticlesRepository {
-    fun latestArticles(searchTerm: String = "brexit"): Single<List<ListItem>>
+    companion object {
+        const val DEFAULT_SEARCH_TERM: String = "uk,fintech"
+    }
+
+    fun latestArticles(searchTerm: String = DEFAULT_SEARCH_TERM): Single<List<ListItem>>
 
     fun getArticle(
         articleUrl: String,

@@ -16,7 +16,7 @@ class ArticleMapper(private val dateFormatUtil: DateFormatUtil) {
         val articles = ArrayList<ListItem>()
         val currentDate = Date()
         var currentWeek = 1
-        var firstArticleInWeek: Boolean = true
+        var firstArticleInWeek = true
 
         val results = rawArticleListResponse.response.results
         sortDatesFromCurrentToEarlier(results)
@@ -32,18 +32,7 @@ class ArticleMapper(private val dateFormatUtil: DateFormatUtil) {
                 firstArticleInWeek = true
             }
 
-            articles.add(
-                Article(
-                    rawArticle.id,
-                    rawArticle.fields.thumbnail,
-                    rawArticle.sectionId,
-                    rawArticle.sectionName,
-                    dateFormatUtil.getFormattedDate(articleDate),
-                    rawArticle.fields.headline,
-                    rawArticle.apiUrl,
-                    firstArticleInWeek
-                )
-            )
+            addArticle(articles, rawArticle, articleDate, firstArticleInWeek)
 
             if (firstArticleInWeek) {
                 firstArticleInWeek = false
@@ -51,6 +40,26 @@ class ArticleMapper(private val dateFormatUtil: DateFormatUtil) {
         }
 
         return articles
+    }
+
+    private fun addArticle(
+        articles: ArrayList<ListItem>,
+        rawArticle: RawArticle,
+        articleDate: Date,
+        firstArticleInWeek: Boolean
+    ) {
+        articles.add(
+            Article(
+                rawArticle.id,
+                rawArticle.fields.thumbnail,
+                rawArticle.sectionId,
+                rawArticle.sectionName,
+                dateFormatUtil.getFormattedDate(articleDate),
+                rawArticle.fields.headline,
+                rawArticle.apiUrl,
+                firstArticleInWeek
+            )
+        )
     }
 
     private fun sortDatesFromCurrentToEarlier(results: List<RawArticle>) {

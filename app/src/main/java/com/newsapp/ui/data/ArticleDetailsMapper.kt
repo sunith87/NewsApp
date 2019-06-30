@@ -4,7 +4,7 @@ import com.newsapp.api.model.RawArticleDetailsResponse
 import com.newsapp.ui.articlelist.model.ArticleDetails
 import com.newsapp.util.DateFormatUtil
 
-class ArticleDetailsMapper(private val dateFormatUtil: DateFormatUtil) {
+class ArticleDetailsMapper(private val mockDateFormatUtil: DateFormatUtil) {
 
     fun mapToDetails(articleDetailsResponse: RawArticleDetailsResponse): ArticleDetails {
         val content = articleDetailsResponse.response.content
@@ -15,7 +15,7 @@ class ArticleDetailsMapper(private val dateFormatUtil: DateFormatUtil) {
             fields.headline,
             fields.thumbnail,
             content.sectionName,
-            dateFormatUtil.getFormattedDate(content.webPublicationDate)
+            mockDateFormatUtil.getFormattedDate(content.webPublicationDate)
         )
     }
 }

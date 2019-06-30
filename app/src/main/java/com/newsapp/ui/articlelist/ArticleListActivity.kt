@@ -15,8 +15,10 @@ import com.newsapp.ui.articlelist.model.ListItem
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import com.newsapp.ui.details.DetailsActivity
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_article_list.*
 import javax.inject.Inject
+import javax.security.auth.Subject
 
 class ArticleListActivity : AppCompatActivity(), ArticleListView {
 
@@ -33,6 +35,8 @@ class ArticleListActivity : AppCompatActivity(), ArticleListView {
 
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
+
+        swipe_refreshlayout.setOnRefreshListener { presenter.onRefresh() }
 
         presenter.register(this)
     }
@@ -54,13 +58,6 @@ class ArticleListActivity : AppCompatActivity(), ArticleListView {
                 }
             })
         }
-    }
-
-    override fun onRefreshAction(): Observable<Any> {
-        return Observable.create<Any> { emitter ->
-            swipe_refreshlayout.setOnRefreshListener { emitter.onNext(Event.IGNORE) }
-            emitter.setCancellable { swipe_refreshlayout.setOnRefreshListener(null) }
-        }.startWith(Event.IGNORE)
     }
 
     override fun openArticleDetail(article: Article) {

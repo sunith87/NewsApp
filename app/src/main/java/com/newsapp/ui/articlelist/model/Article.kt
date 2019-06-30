@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Article(
     val id: String,
-    val thumbnail: String,
+    val thumbnail: String?,
     val sectionId: String,
     val sectionName: String,
     val publishedFormatted: String,

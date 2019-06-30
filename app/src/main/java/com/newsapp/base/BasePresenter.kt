@@ -3,9 +3,10 @@ package com.newsapp.base
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-open class BasePresenter<V : BaseView> {
-    private val disposables = CompositeDisposable()
-    private var view: V? = null
+open class BasePresenter<V : BaseView>(private val disposables: CompositeDisposable) {
+
+    var view: V? = null
+        private set
 
     open fun register(view: V) {
         this.view?.also {
@@ -23,7 +24,7 @@ open class BasePresenter<V : BaseView> {
         }
     }
 
-    protected fun addDisposable(disposable: Disposable) {
+    fun addDisposable(disposable: Disposable) {
         disposables.add(disposable)
     }
 }

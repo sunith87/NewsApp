@@ -6,11 +6,13 @@ import com.newsapp.base.SchedulerProvider
 import com.newsapp.ui.articlelist.model.ArticleDetails
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import com.newsapp.ui.data.ArticlesRepository
+import io.reactivex.disposables.CompositeDisposable
 
 class DetailsPresenter(
+    private val articlesRepository: ArticlesRepository,
     private val schedulerProvider: SchedulerProvider,
-    private val articlesRepository: ArticlesRepository
-) : BasePresenter<DetailsPresenterView>() {
+    compositeDisposable: CompositeDisposable = CompositeDisposable()
+) : BasePresenter<DetailsPresenterView>(compositeDisposable) {
 
     fun register(articleUrl: String, view: DetailsPresenterView) {
         super.register(view)

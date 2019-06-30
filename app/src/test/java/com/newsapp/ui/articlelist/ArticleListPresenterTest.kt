@@ -6,6 +6,8 @@ import com.newsapp.ui.articlelist.model.ListItem
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import com.newsapp.ui.data.ArticlesRepository
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.atLeastOnce
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import io.reactivex.Observable
@@ -14,7 +16,6 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 
 import org.mockito.MockitoAnnotations.initMocks
 
@@ -38,7 +39,6 @@ class ArticleListPresenterTest {
         initMocks(this)
         whenever(mockSchedulerProvider.ioScheduler()).thenReturn(Schedulers.trampoline())
         whenever(mockSchedulerProvider.mainScheduler()).thenReturn(Schedulers.trampoline())
-        whenever(view.onRefreshAction()).thenReturn(Observable.just(Object()))
         whenever(view.onArticleClicked()).thenReturn(Observable.just(mockArticle))
         presenter = ArticleListPresenter(
             articlesRepository,
@@ -48,44 +48,56 @@ class ArticleListPresenterTest {
 
     @Test
     @Throws(Exception::class)
-    fun register_shouldFetchLatestArticles() {
+    fun `given register called then should fetch Latest Articles`() {
         presenter.register(view)
 
-        Mockito.verify(articlesRepository).latestArticles()
+        verify(articlesRepository).latestArticles()
     }
 
     @Test
-    fun register_shouldShowArticles_whenFetchSuccessful() {
+    fun `given register called then should should show articles when fetch successful`() {
         whenever(articlesRepository.latestArticles()).thenReturn(Single.just(mockArticleDataList))
 
         presenter.register(view)
 
-        Mockito.verify(articlesRepository).latestArticles()
-        Mockito.verify(view).showRefreshing(false)
-        Mockito.verify(view).showArticles(mockArticleDataList)
+        verify(articlesRepository).latestArticles()
+        verify(view).showRefreshing(false)
+        verify(view).showArticles(mockArticleDataList)
     }
 
     @Test
-    fun register_shouldShowError_whenFetchFails() {
+    fun `given onRefresh called then should should show articles when fetch successful`() {
+        whenever(articlesRepository.latestArticles()).thenReturn(Single.just(mockArticleDataList))
+
+        presenter.register(view)
+        presenter.onRefresh()
+
+        verify(articlesRepository, atLeastOnce()).latestArticles()
+        verify(view, atLeastOnce()).showRefreshing(false)
+        verify(view, atLeastOnce()).showArticles(mockArticleDataList)
+    }
+
+    @Test
+    fun `given register called then should should show error when fetch fails`() {
         val expectedThrowable = Throwable()
         whenever(articlesRepository.latestArticles()).thenReturn(Single.error(expectedThrowable))
         val argumentCaptor = argumentCaptor<ArticleFetchError>()
 
         presenter.register(view)
 
-        Mockito.verify(articlesRepository).latestArticles()
-        Mockito.verify(view).showRefreshing(false)
-        Mockito.verify(view).handlerError(argumentCaptor.capture())
+        verify(articlesRepository).latestArticles()
+        verify(view).showRefreshing(false)
+        verify(view).handlerError(argumentCaptor.capture())
 
         assertEquals(expectedThrowable, argumentCaptor.firstValue.throwable)
     }
 
     @Test
-    fun register_onArticleClicked() {
+    fun `given an article clicked after view registered then open article called on view`() {
         whenever(view.onArticleClicked()).thenReturn(Observable.just(mockArticle))
 
         presenter.register(view)
 
-        Mockito.verify(view).openArticleDetail(mockArticle)
+        verify(view).openArticleDetail(mockArticle)
     }
 }

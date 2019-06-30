@@ -1,4 +1,4 @@
-package com.newsapp.di.module
+package com.newsapp.dagger.module
 
 import android.app.Application
 import android.content.Context

@@ -1,10 +1,10 @@
 package com.newsapp
 
 import android.app.Application
-import com.newsapp.di.component.ArticlesComponent
-import com.newsapp.di.component.DaggerArticlesComponent
-import com.newsapp.di.module.AndroidModule
-import com.newsapp.di.module.ArticleDataModule
+import com.newsapp.dagger.component.ArticlesComponent
+import com.newsapp.dagger.component.DaggerArticlesComponent
+import com.newsapp.dagger.module.AndroidModule
+import com.newsapp.dagger.module.ArticleDataModule
 
 class NewsApp : Application() {
 

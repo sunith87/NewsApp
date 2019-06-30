@@ -1,4 +1,4 @@
-package com.newsapp.di.module
+package com.newsapp.dagger.module
 
 import android.content.Context
 import android.content.res.Resources
@@ -17,6 +17,7 @@ import com.newsapp.util.DateFormatUtil
 import dagger.Module
 import dagger.Provides
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -67,7 +68,7 @@ class ArticleDataModule() {
         articlesRepository: ArticlesRepository,
         schedulerProvider: SchedulerProvider
     ): ArticleListPresenter {
-        return ArticleListPresenter(articlesRepository, schedulerProvider)
+        return ArticleListPresenter(articlesRepository, schedulerProvider, CompositeDisposable())
     }
 
     @Provides
@@ -75,7 +76,7 @@ class ArticleDataModule() {
         articlesRepository: ArticlesRepository,
         schedulerProvider: SchedulerProvider
     ): DetailsPresenter {
-        return DetailsPresenter(schedulerProvider, articlesRepository)
+        return DetailsPresenter(articlesRepository, schedulerProvider, CompositeDisposable())
     }
 
     @Provides

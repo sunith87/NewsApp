@@ -8,10 +8,12 @@ import com.newsapp.api.GuardianApiService
 import com.newsapp.base.SchedulerProvider
 import com.newsapp.ui.articlelist.ArticleListPresenter
 import com.newsapp.ui.articlelist.adapter.ArticlesAdapter
+import com.newsapp.ui.data.ArticleDetailsMapper
 import com.newsapp.ui.data.ArticleMapper
 import com.newsapp.ui.data.ArticlesRepository
 import com.newsapp.ui.data.GuardianArticlesRepository
 import com.newsapp.ui.details.DetailsPresenter
+import com.newsapp.util.DateFormatUtil
 import dagger.Module
 import dagger.Provides
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,14 +36,25 @@ class ArticleDataModule() {
     @Provides
     fun provideArticlesRepository(
         apiService: GuardianApiService,
-        mapper: ArticleMapper
+        articleMapper: ArticleMapper,
+        articleDetailsMapper: ArticleDetailsMapper
     ): ArticlesRepository {
-        return GuardianArticlesRepository(apiService, mapper)
+        return GuardianArticlesRepository(apiService, articleMapper, articleDetailsMapper)
     }
 
     @Provides
-    fun provideArticleMapper(): ArticleMapper {
-        return ArticleMapper()
+    fun provideDateFormatUtil(): DateFormatUtil {
+        return DateFormatUtil()
+    }
+
+    @Provides
+    fun provideArticleMapper(dateFormatUtil: DateFormatUtil): ArticleMapper {
+        return ArticleMapper(dateFormatUtil)
+    }
+
+    @Provides
+    fun provideArticleDetailsMapper(dateFormatUtil: DateFormatUtil): ArticleDetailsMapper {
+        return ArticleDetailsMapper(dateFormatUtil)
     }
 
     @Provides

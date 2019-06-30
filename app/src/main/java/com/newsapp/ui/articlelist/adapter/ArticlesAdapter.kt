@@ -13,15 +13,23 @@ import java.util.ArrayList
 class ArticlesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        private const val ARTICLE = 1
-        private const val WEEK = 2
+        private const val ARTICLE_FIRST = 1
+        private const val ARTICLE = 2
+        private const val WEEK = 3
     }
 
     private val articles = ArrayList<ListItem>()
     private var articleClickListener: ArticleClickListener? = null
 
     override fun getItemViewType(position: Int): Int {
-        return if (articles[position].isWeekData()) WEEK else ARTICLE
+        val listItem = articles[position]
+        return if (listItem.isWeekData()) {
+            WEEK
+        } else if (listItem is Article && listItem.firstArticleInWeek) {
+            ARTICLE_FIRST
+        } else {
+            ARTICLE
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -29,6 +37,10 @@ class ArticlesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(R.layout.list_item_article, parent, false)
             ArticleViewHolder(view, articleClickListener)
+        } else if (viewType == ARTICLE_FIRST) {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val view = layoutInflater.inflate(R.layout.list_item_article_first, parent, false)
+            ArticleFirstViewHolder(view, articleClickListener)
         } else {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(R.layout.list_item_week, parent, false)
@@ -39,6 +51,8 @@ class ArticlesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val articleData = articles[position]
         if (holder is ArticleViewHolder && articleData is Article) {
+            holder.bind(articleData)
+        } else if (holder is ArticleFirstViewHolder && articleData is Article) {
             holder.bind(articleData)
         } else if (holder is ArticleWeekViewHolder && articleData is ArticleWeekData) {
             holder.bind(articleData.headline)

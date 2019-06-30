@@ -2,10 +2,12 @@
 <resources>
     <dimen name="article_image_padding">15dp</dimen>
     <dimen name="article_image_width_height">50dp</dimen>
+    <dimen name="article_first_image_width_height">200dp</dimen>
     <dimen name="article_item_padding">10dp</dimen>
     <dimen name="item_padding_top_bottom">15dp</dimen>
     <dimen name="details_header_padding">15dp</dimen>
     <dimen name="details_text_padding">15dp</dimen>
     <dimen name="details_heading_text_size">28sp</dimen>
-    <dimen name="details_text_size">20sp</dimen>
+    <dimen name="details_text_size">16sp</dimen>
+    <dimen name="article_first_headline_text_size">24sp</dimen>
 </resources>

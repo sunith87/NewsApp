@@ -1,10 +1,10 @@
 package com.newsapp.ui.details
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.widget.Toast
 
@@ -19,9 +19,10 @@ import com.newsapp.NewsApp
 import com.newsapp.R
 import com.newsapp.ui.articlelist.model.Article
 import kotlinx.android.synthetic.main.activity_article_details.*
+import kotlinx.android.synthetic.main.activity_article_details.toolbar
 import javax.inject.Inject
 
-class DetailsActivity : Activity(), DetailsPresenterView {
+class DetailsActivity : AppCompatActivity(), DetailsPresenterView {
 
     companion object {
         private const val DATA_ARTICLE_URL_KEY = "DATA_ARTICLE_URL_KEY"
@@ -39,6 +40,7 @@ class DetailsActivity : Activity(), DetailsPresenterView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_details)
+        setSupportActionBar(toolbar)
         val url = intent.getStringExtra(DATA_ARTICLE_URL_KEY)
         details_fetch_progress.visibility = VISIBLE
         (application as NewsApp).appComponent.inject(this)
@@ -51,8 +53,10 @@ class DetailsActivity : Activity(), DetailsPresenterView {
     }
 
     override fun renderDetails(articleDetails: ArticleDetails) {
+        toolbar.title = articleDetails.sectionName
         details_fetch_progress.visibility = GONE
-        article_headline_textview.text = articleDetails.headline
+        article_details_headline_textview.text = articleDetails.headline
+        article_details_date_textview.text = articleDetails.dateString
         setBody(articleDetails)
         Glide.with(this).load(articleDetails.thumbnail).into(details_image)
     }

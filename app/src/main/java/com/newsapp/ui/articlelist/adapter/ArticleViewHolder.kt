@@ -36,8 +36,8 @@ internal class ArticleViewHolder(
 
     fun bind(article: Article) {
         this.article = article
-        itemView.findViewById<TextView>(R.id.article_headline_textview).text = article.title
-        itemView.findViewById<TextView>(R.id.article_date_textview).text = article.publishedFormatted
+        itemView.findViewById<TextView>(R.id.article_details_headline_textview).text = article.title
+        itemView.findViewById<TextView>(R.id.article_details_date_textview).text = article.publishedFormatted
 
         Glide.with(itemView.context)
             .load(article.thumbnail)

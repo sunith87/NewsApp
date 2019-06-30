@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/article_item_padding"
+                                    android:layout_marginRight="@dimen/article_item_padding"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:clickable="true">
+
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/article_item_padding">
+
+        <ImageView
+                android:id="@+id/article_first_thumbnail_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/article_first_image_width_height"
+                android:layout_gravity="center"/>
+
+        <TextView
+                android:id="@+id/article_first_headline_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/article_first_thumbnail_imageview"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="@dimen/article_item_padding"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/article_first_headline_text_size"
+                tools:text="Headline"/>
+
+        <TextView
+                android:id="@+id/article_first_date_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:layout_below="@id/article_first_headline_textview"
+                android:textColor="@android:color/darker_gray"
+                android:layout_alignParentStart="true"
+                tools:text="01/01/2019"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

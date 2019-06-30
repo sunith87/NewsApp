@@ -9,7 +9,8 @@ data class Article(
     val sectionName: String,
     val publishedFormatted: String,
     val title: String,
-    val url: String
+    val url: String,
+    val firstArticleInWeek: Boolean
 ) : ListItem, Serializable {
     override fun isWeekData(): Boolean = false
 }

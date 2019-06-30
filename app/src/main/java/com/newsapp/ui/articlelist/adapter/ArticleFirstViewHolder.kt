@@ -16,7 +16,6 @@ internal class ArticleFirstViewHolder(
 
     private var article: Article? = null
 
-
     init {
         view.setOnClickListener(this)
     }

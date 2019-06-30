@@ -1,6 +1,5 @@
 package com.newsapp.ui.articlelist
 
-import android.util.Log
 import com.newsapp.base.BasePresenter
 import com.newsapp.base.BaseView
 import com.newsapp.base.SchedulerProvider

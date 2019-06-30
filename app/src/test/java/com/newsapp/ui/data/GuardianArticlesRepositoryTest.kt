@@ -122,5 +122,4 @@ class GuardianArticlesRepositoryTest {
 
         test.assertError(mockError)
     }
-
 }

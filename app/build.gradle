@@ -52,7 +52,6 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.21'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
 
-
     // Tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.27.0'

@@ -8,17 +8,14 @@ import android.view.View
 import android.widget.Toast
 import com.newsapp.NewsApp
 import com.newsapp.R
-import com.newsapp.base.Event
 import com.newsapp.ui.articlelist.adapter.ArticlesAdapter
 import com.newsapp.ui.articlelist.model.Article
 import com.newsapp.ui.articlelist.model.ListItem
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import com.newsapp.ui.details.DetailsActivity
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_article_list.*
 import javax.inject.Inject
-import javax.security.auth.Subject
 
 class ArticleListActivity : AppCompatActivity(), ArticleListView {
 

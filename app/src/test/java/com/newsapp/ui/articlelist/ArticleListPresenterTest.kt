@@ -4,6 +4,8 @@ import com.newsapp.base.SchedulerProvider
 import com.newsapp.ui.articlelist.model.Article
 import com.newsapp.ui.articlelist.model.ListItem
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
+import com.newsapp.ui.articlelist.mvp.ArticleListPresenter
+import com.newsapp.ui.articlelist.mvp.ArticleListView
 import com.newsapp.ui.data.ArticlesRepository
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.atLeastOnce
@@ -41,8 +43,7 @@ class ArticleListPresenterTest {
         whenever(mockSchedulerProvider.mainScheduler()).thenReturn(Schedulers.trampoline())
         whenever(view.onArticleClicked()).thenReturn(Observable.just(mockArticle))
         presenter = ArticleListPresenter(
-            articlesRepository,
-            mockSchedulerProvider
+            articlesRepository
         )
     }
 
@@ -51,28 +52,28 @@ class ArticleListPresenterTest {
     fun `given register called then should fetch Latest Articles`() {
         presenter.register(view)
 
-        verify(articlesRepository).latestArticles()
+        verify(articlesRepository).latestArticlesAsync()
     }
 
     @Test
     fun `given register called then should should show articles when fetch successful`() {
-        whenever(articlesRepository.latestArticles()).thenReturn(Single.just(mockArticleDataList))
+        whenever(articlesRepository.latestArticlesAsync()).thenReturn(Single.just(mockArticleDataList))
 
         presenter.register(view)
 
-        verify(articlesRepository).latestArticles()
+        verify(articlesRepository).latestArticlesAsync()
         verify(view).showRefreshing(false)
         verify(view).showArticles(mockArticleDataList)
     }
 
     @Test
     fun `given onRefresh called then should should show articles when fetch successful`() {
-        whenever(articlesRepository.latestArticles()).thenReturn(Single.just(mockArticleDataList))
+        whenever(articlesRepository.latestArticlesAsync()).thenReturn(Single.just(mockArticleDataList))
 
         presenter.register(view)
         presenter.onRefresh()
 
-        verify(articlesRepository, atLeastOnce()).latestArticles()
+        verify(articlesRepository, atLeastOnce()).latestArticlesAsync()
         verify(view, atLeastOnce()).showRefreshing(false)
         verify(view, atLeastOnce()).showArticles(mockArticleDataList)
     }
@@ -80,12 +81,12 @@ class ArticleListPresenterTest {
     @Test
     fun `given register called then should should show error when fetch fails`() {
         val expectedThrowable = Throwable()
-        whenever(articlesRepository.latestArticles()).thenReturn(Single.error(expectedThrowable))
+        whenever(articlesRepository.latestArticlesAsync()).thenReturn(Single.error(expectedThrowable))
         val argumentCaptor = argumentCaptor<ArticleFetchError>()
 
         presenter.register(view)
 
-        verify(articlesRepository).latestArticles()
+        verify(articlesRepository).latestArticlesAsync()
         verify(view).showRefreshing(false)
         verify(view).handlerError(argumentCaptor.capture())
 

@@ -1,11 +1,11 @@
 package com.newsapp.ui.articlelist.adapter
 
 import android.graphics.Bitmap
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.widget.RecyclerView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.newsapp.R

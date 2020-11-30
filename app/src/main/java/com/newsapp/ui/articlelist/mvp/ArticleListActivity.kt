@@ -1,13 +1,13 @@
-package com.newsapp.ui.articlelist
+package com.newsapp.ui.articlelist.mvp
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.newsapp.NewsApp
 import com.newsapp.R
+import com.newsapp.ui.articlelist.ArticleClickListener
 import com.newsapp.ui.articlelist.adapter.ArticlesAdapter
 import com.newsapp.ui.articlelist.model.Article
 import com.newsapp.ui.articlelist.model.ListItem
@@ -44,7 +44,9 @@ class ArticleListActivity : AppCompatActivity(), ArticleListView {
     }
 
     override fun showArticles(articles: List<ListItem>) {
-        adapter.showArticles(articles)
+        runOnUiThread {
+            adapter.showArticles(articles)
+        }
     }
 
     override fun onArticleClicked(): Observable<Article> {
@@ -63,15 +65,21 @@ class ArticleListActivity : AppCompatActivity(), ArticleListView {
     }
 
     override fun handlerError(error: ArticleFetchError) {
-        showSnackbar("Article Fetch Error: Something went wrong, " + error.throwable.message)
+        runOnUiThread {
+            showSnackbar("Article Fetch Error: Something went wrong, " + error.throwable.message)
+        }
     }
 
     private fun showSnackbar(message: String) {
-        val rootView = findViewById<View>(android.R.id.content)
-        Snackbar.make(rootView, message, Toast.LENGTH_SHORT).show()
+        runOnUiThread {
+            val rootView = findViewById<View>(android.R.id.content)
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun showRefreshing(isRefreshing: Boolean) {
-        swipe_refreshlayout.isRefreshing = isRefreshing
+        runOnUiThread {
+            swipe_refreshlayout.isRefreshing = isRefreshing
+        }
     }
 }

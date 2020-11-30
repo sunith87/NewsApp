@@ -1,8 +1,8 @@
 package com.newsapp.ui.articlelist.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.newsapp.R
 import com.newsapp.ui.articlelist.ArticleClickListener
 import com.newsapp.ui.articlelist.model.ListItem

@@ -7,6 +7,10 @@ import com.newsapp.ui.articlelist.model.ArticleDetails
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import com.newsapp.ui.data.ArticlesRepository
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class DetailsPresenter(
     private val articlesRepository: ArticlesRepository,
@@ -14,15 +18,23 @@ class DetailsPresenter(
     compositeDisposable: CompositeDisposable = CompositeDisposable()
 ) : BasePresenter<DetailsPresenterView>(compositeDisposable) {
 
+    private var getArticleJob: Job? = null
+
     fun register(articleUrl: String, view: DetailsPresenterView) {
         super.register(view)
-        addDisposable(
-            articlesRepository.getArticle(articleUrl)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.mainScheduler())
-                .subscribe({ articleDetails -> view.renderDetails(articleDetails) },
-                    { error -> view.showError(ArticleFetchError(error)) })
-        )
+        getArticleJob = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                view.renderDetails(articlesRepository.getArticle(articleUrl))
+            } catch (ex: Throwable) {
+                view.showError(ArticleFetchError(ex))
+            }
+
+        }
+    }
+
+    override fun unregister() {
+        super.unregister()
+        getArticleJob?.cancel()
     }
 }
 

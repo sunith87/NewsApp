@@ -1,21 +1,24 @@
-package com.newsapp.ui.articlelist
+package com.newsapp.ui.articlelist.mvp
 
 import com.newsapp.base.BasePresenter
 import com.newsapp.base.BaseView
-import com.newsapp.base.SchedulerProvider
 import com.newsapp.ui.data.ArticlesRepository
 import com.newsapp.ui.articlelist.model.Article
 import com.newsapp.ui.articlelist.model.ListItem
 import com.newsapp.ui.articlelist.model.error.ArticleFetchError
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class ArticleListPresenter(
     private val articlesRepository: ArticlesRepository,
-    private val schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable = CompositeDisposable()
 ) : BasePresenter<ArticleListView>(compositeDisposable) {
+
+    var refreshJob: Job? = null
 
     override fun register(view: ArticleListView) {
         super.register(view)
@@ -33,19 +36,19 @@ class ArticleListPresenter(
     }
 
     fun onRefresh() {
-        addDisposable(
-            Observable.fromCallable { view?.also { it.showRefreshing(true) } }
-                .flatMapSingle {
-                    articlesRepository.latestArticles()
-                }
-                .observeOn(schedulerProvider.mainScheduler())
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .subscribe({ articles ->
-                    handleSuccess(articles)
-                }, { error ->
-                    handleError(error)
-                })
-        )
+        refreshJob = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val latestArticles = articlesRepository.latestArticlesAsync()
+                handleSuccess(latestArticles)
+            } catch (error: Throwable) {
+                handleError(error)
+            }
+        }
+    }
+
+    override fun unregister() {
+        super.unregister()
+        refreshJob?.cancel()
     }
 
     private fun handleError(error: Throwable) {

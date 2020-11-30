@@ -15,7 +15,7 @@ open class BasePresenter<V : BaseView>(private val disposables: CompositeDisposa
         this.view = view
     }
 
-    fun unregister() {
+    open fun unregister() {
         if (view != null) {
             view = null
             disposables.clear()

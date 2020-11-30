@@ -61,21 +61,21 @@ class GuardianArticlesRepositoryTest {
 
     @Test
     fun `given latestArticles called then search api called on guardian api service`() {
-        cut.latestArticles().test()
+        cut.latestArticlesAsync().test()
 
         verify(mockGuardianApiService).searchArticles(ArticlesRepository.DEFAULT_SEARCH_TERM)
     }
 
     @Test
     fun `given latestArticles called then article mapper called`() {
-        cut.latestArticles().test()
+        cut.latestArticlesAsync().test()
 
         verify(mockArticleMapper).map(mockRawArticleListResponse)
     }
 
     @Test
     fun `given latestArticles called when subscribed then a list of items returned`() {
-        val test = cut.latestArticles().test()
+        val test = cut.latestArticlesAsync().test()
 
         test.assertValue(mockList)
         assertTrue(mockList.contains(mockListItem))
@@ -87,7 +87,7 @@ class GuardianArticlesRepositoryTest {
         val mockError = Throwable()
         whenever(mockGuardianApiService.searchArticles(any())).thenReturn(Single.error(mockError))
 
-        val test = cut.latestArticles().test()
+        val test = cut.latestArticlesAsync().test()
 
         test.assertError(mockError)
     }

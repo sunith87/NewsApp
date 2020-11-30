@@ -2,11 +2,14 @@ package com.newsapp.dagger.module
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.newsapp.R
 import com.newsapp.api.GuardianApiService
 import com.newsapp.base.SchedulerProvider
-import com.newsapp.ui.articlelist.ArticleListPresenter
+import com.newsapp.ui.articlelist.mvp.ArticleListPresenter
 import com.newsapp.ui.articlelist.adapter.ArticlesAdapter
 import com.newsapp.ui.data.ArticleDetailsMapper
 import com.newsapp.ui.data.ArticleMapper
@@ -65,10 +68,9 @@ class ArticleDataModule() {
 
     @Provides
     fun provideArticleListPresenter(
-        articlesRepository: ArticlesRepository,
-        schedulerProvider: SchedulerProvider
+        articlesRepository: ArticlesRepository
     ): ArticleListPresenter {
-        return ArticleListPresenter(articlesRepository, schedulerProvider, CompositeDisposable())
+        return ArticleListPresenter(articlesRepository, CompositeDisposable())
     }
 
     @Provides
@@ -86,6 +88,7 @@ class ArticleDataModule() {
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .client(createOkHttpClient(context.resources))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(GuardianApiService::class.java)
     }
@@ -95,6 +98,16 @@ class ArticleDataModule() {
         return object : SchedulerProvider {
             override fun ioScheduler() = Schedulers.io()
             override fun mainScheduler() = AndroidSchedulers.mainThread()
+        }
+    }
+
+    @Provides
+    fun provideViewModelProvideFactory(articleRepository: ArticlesRepository): ViewModelProvider.Factory {
+        return object : ViewModelProvider.NewInstanceFactory() {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return modelClass.getConstructor(ArticlesRepository::class.java)
+                    .newInstance(articleRepository)
+            }
         }
     }
 
